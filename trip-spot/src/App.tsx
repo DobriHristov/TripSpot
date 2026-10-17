@@ -13,7 +13,7 @@ import EditPlacePage from "./pages/EditPlacePage";
 import FavoritesPage from "./pages/FavoritesPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFoundPage from "./pages/NotFoundPage";
-import "./styles.css"
+import "./index.css";
 
 export default function App() {
   return (
