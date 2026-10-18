@@ -103,6 +103,8 @@ export interface ReviewsApi {
 }
 
 export interface PlacesApi {
+  list(query?: PlaceQuery): Promise<Place[]>;
+  search(query: PageQuery): Promise<Paginated<Place>>;
   getById(id: string): Promise<Place>;
   create(dto: PlaceDto): Promise<Place>;
   update(id: string, dto: PlaceDto): Promise<Place>;

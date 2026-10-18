@@ -4,8 +4,10 @@ import type {
   AuthApi,
   FavoritesApi,
   ImagesApi,
+  PageQuery,
+  Paginated,
   Place,
-  // PlaceQuery,
+  PlaceQuery,
   PlacesApi,
   ReviewsApi,
   User,
@@ -122,6 +124,29 @@ const fetchUser = async (
   );
 };
 
+const applyPlaceFilters = (query: PlaceQuery) => {
+  let q = supabase.from("places").select("*", { count: "exact" });
+
+  if (query.category) {
+    q = q.eq("category", query.category);
+  }
+
+  if (query.authorId) {
+    q = q.eq("author_id", query.authorId);
+  }
+
+  const search = query.search?.trim();
+
+  if (search) {
+    const pattern = `%${search}%`;
+    q = q.or(
+      `name.ilike.${pattern},location.ilike.${pattern},description.ilike.${pattern}`,
+    );
+  }
+
+  return q.order("created_at", { ascending: false });
+};
+
 const requireUserId = async (): Promise<string> => {
   const { data, error } = await supabase.auth.getUser();
 
@@ -133,29 +158,40 @@ const requireUserId = async (): Promise<string> => {
 };
 
 export const supabasePlacesApi: PlacesApi = {
-  //   const limit = Math.max(1, query.limit);
-  //   const page = Math.max(1, query.page);
-  //   const from = (page - 1) * limit;
-  //   const { data, error, count } = await applyPlaceFilters(query).range(
-  //     from,
-  //     from + limit - 1,
-  //   );
+  list: async (query = {}) => {
+    const { data, error } = await applyPlaceFilters(query);
 
-  //   if (error) {
-  //     fail(error, "Грешка при зареждане на местата.");
-  //   }
+    if (error) {
+      fail(error, "Грешка при зареждане на местата.");
+    }
 
-  //   const total = count ?? 0;
-  //   const totalPages = Math.max(1, Math.ceil(total / limit));
+    return hydratePlaces(data ?? []);
+  },
 
-  //   return {
-  //     items: await hydratePlaces(data ?? []),
-  //     total,
-  //     page,
-  //     limit,
-  //     totalPages,
-  //   };
-  // },
+  search: async (query: PageQuery): Promise<Paginated<Place>> => {
+    const limit = Math.max(1, query.limit);
+    const page = Math.max(1, query.page);
+    const from = (page - 1) * limit;
+    const { data, error, count } = await applyPlaceFilters(query).range(
+      from,
+      from + limit - 1,
+    );
+
+    if (error) {
+      fail(error, "Грешка при зареждане на местата.");
+    }
+
+    const total = count ?? 0;
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+
+    return {
+      items: await hydratePlaces(data ?? []),
+      total,
+      page,
+      limit,
+      totalPages,
+    };
+  },
 
   getById: async (id) => {
     const { data, error } = await supabase
