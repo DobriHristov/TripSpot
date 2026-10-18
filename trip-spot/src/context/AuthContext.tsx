@@ -39,7 +39,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .select("display_name")
         .eq("id", userId)
         .maybeSingle();
+
       if (cancelled) return;
+
       setUser({
         id: userId,
         email,
@@ -48,33 +50,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
     };
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (cancelled) return;
-      if (data.session?.user) {
-        void loadUser(
-          data.session.user.id,
-          data.session.user.email ?? "",
-          data.session.user.created_at,
-        );
-      }
-      setIsReady(true);
-    });
+    const initializeAuth = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
 
-    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" && session?.user) {
+        if (error) throw error;
+
+        if (data.session?.user) {
+          await loadUser(
+            data.session.user.id,
+            data.session.user.email ?? "",
+            data.session.user.created_at,
+          );
+        }
+      } catch (error) {
+        console.error("Failed to restore authentication:", error);
+        if (!cancelled) setUser(null);
+      } finally {
+        if (!cancelled) setIsReady(true);
+      }
+    };
+
+    void initializeAuth();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") {
+        setUser(null);
+      } else if (event === "SIGNED_IN" && session?.user) {
         void loadUser(
           session.user.id,
           session.user.email ?? "",
           session.user.created_at,
         );
-      } else if (event === "SIGNED_OUT") {
-        setUser(null);
       }
     });
 
     return () => {
       cancelled = true;
-      sub.subscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, []);
 
