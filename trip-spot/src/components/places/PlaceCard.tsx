@@ -4,6 +4,7 @@ import type { Place } from "../../types";
 import { categoryLabel } from "../../utils/constants";
 import { formatRating } from "../../utils/format";
 import { FALLBACK_IMAGE, resolveImage } from "../../utils/images";
+import { FavoriteButton } from "./FavoriteButton";
 import "./PlaceCard.css";
 
 export function PlaceCard({ place }: { place: Place }) {
@@ -24,6 +25,7 @@ export function PlaceCard({ place }: { place: Place }) {
         <span className="place-card__badge">
           {categoryLabel(place.category)}
         </span>
+        <FavoriteButton placeId={place.id} className="place-card__fav" />
       </div>
 
       <div className="place-card__body">
