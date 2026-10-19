@@ -22,7 +22,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
         }
         onClick={onNavigate}
       >
-        Начало
+        Начало тест
       </NavLink>
 
       <NavLink
