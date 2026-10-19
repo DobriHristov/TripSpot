@@ -32,9 +32,9 @@ export default function NotFoundPage() {
             <ArrowLeft className="mr-2 h-4 w-4" />
             Назад
           </Button>
-          <Button asChild className="w-full sm:w-auto">
+          <Button asChild className="w-full sm:w-auto" variant="outline">
             <Link to="/">
-              Към началната страница
+              Към начална страница
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>

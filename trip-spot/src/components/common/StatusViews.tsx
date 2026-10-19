@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { AlertTriangle, Compass, Loader2 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 
@@ -28,11 +29,17 @@ export function ErrorState({
     >
       <AlertTriangle className="h-7 w-7 text-destructive" />
       <p className="font-medium">{message}</p>
-      {onRetry && (
-        <Button variant="outline" onClick={onRetry}>
-          Опитай отново
+      <div className="mt-2 flex flex-col items-center gap-2 sm:flex-row">
+        {onRetry && (
+          <Button variant="outline" onClick={onRetry}>
+            Опитай отново
+          </Button>
+        )}
+
+        <Button asChild className="w-full sm:w-auto" variant="outline">
+          <Link to="/">Към начална страница</Link>
         </Button>
-      )}
+      </div>
     </div>
   );
 }

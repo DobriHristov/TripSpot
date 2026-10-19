@@ -36,10 +36,7 @@ export default function PlaceDetailsPage() {
   if (place.error || !place.data) {
     return (
       <div className="container-page py-16">
-        <ErrorState
-          message={place.error ?? "Мястото не е намерено."}
-          onRetry={place.reload}
-        />
+        <ErrorState message={"Мястото не е намерено."} onRetry={place.reload} />
       </div>
     );
   }
