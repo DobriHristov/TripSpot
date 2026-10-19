@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Toaster } from "sonner";
+import { useAuth } from "./context/AuthContext";
 import { Loader } from "./components/common/StatusViews";
 import { Layout } from "./components/layout/Layout";
 import { PrivateRoute } from "./routes/PrivateRoute";
@@ -14,8 +14,6 @@ import EditPlacePage from "./pages/EditPlacePage";
 import FavoritesPage from "./pages/FavoritesPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFoundPage from "./pages/NotFoundPage";
-import { useAuth } from "./context/AuthContext";
-import "./index.css";
 
 export default function App() {
   const { isReady } = useAuth();
@@ -25,30 +23,26 @@ export default function App() {
   }
 
   return (
-    <>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="places" element={<CatalogPage />} />
-          <Route path="places/:placeId" element={<PlaceDetailsPage />} />
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="places" element={<CatalogPage />} />
+        <Route path="places/:placeId" element={<PlaceDetailsPage />} />
 
-          <Route element={<GuestRoute />}>
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />
-          </Route>
-
-          <Route element={<PrivateRoute />}>
-            <Route path="places/new" element={<CreatePlacePage />} />
-            <Route path="places/:placeId/edit" element={<EditPlacePage />} />
-            <Route path="favorites" element={<FavoritesPage />} />
-            <Route path="profile" element={<ProfilePage />} />
-          </Route>
-
-          <Route path="*" element={<NotFoundPage />} />
+        <Route element={<GuestRoute />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
         </Route>
-      </Routes>
 
-      <Toaster richColors position="bottom-right" />
-    </>
+        <Route element={<PrivateRoute />}>
+          <Route path="places/new" element={<CreatePlacePage />} />
+          <Route path="places/:placeId/edit" element={<EditPlacePage />} />
+          <Route path="favorites" element={<FavoritesPage />} />
+          <Route path="profile" element={<ProfilePage />} />
+        </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
   );
 }
