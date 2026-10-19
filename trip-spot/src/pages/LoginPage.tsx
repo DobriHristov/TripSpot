@@ -1,4 +1,5 @@
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { FormAlert, FormField } from "../components/common/FormField";
 import { Button } from "../components/ui/button";
@@ -6,23 +7,19 @@ import { Input } from "../components/ui/input";
 import { useAuth } from "../context/AuthContext";
 import { useForm } from "../hooks/useForm";
 import type { LoginDto } from "../types";
-import { safeRedirect } from "../utils/permissions";
 import { validateLogin } from "../utils/validators";
 
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-
-  const redirect = searchParams.get("redirect");
 
   const form = useForm<LoginDto>(
     { email: "", password: "" },
     validateLogin,
     async (values) => {
       await login(values);
+      navigate("/", { replace: true });
       toast.success("Добре дошъл отново!");
-      navigate(safeRedirect(redirect), { replace: true });
     },
   );
 

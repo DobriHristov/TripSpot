@@ -1,19 +1,16 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Loader } from "../components/common/StatusViews";
-import { safeRedirect } from "../utils/permissions";
 
 export function GuestRoute() {
   const { isAuthenticated, isReady } = useAuth();
-  const location = useLocation();
 
-  if (!isReady) return <Loader />;
+  if (!isReady) {
+    return <Loader />;
+  }
 
   if (isAuthenticated) {
-    const searchParams = new URLSearchParams(location.search);
-    const redirect = searchParams.get("redirect");
-
-    return <Navigate to={safeRedirect(redirect)} replace />;
+    return <Navigate to="/" replace />;
   }
 
   return (

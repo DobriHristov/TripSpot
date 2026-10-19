@@ -91,7 +91,7 @@ export function Header() {
   const handleLogout = async () => {
     setMenuOpen(false);
     await logout();
-    navigate("/", { replace: true });
+    navigate("/login", { replace: true });
   };
 
   return (
@@ -107,7 +107,7 @@ export function Header() {
           </Link>
 
           <nav className="site-nav site-nav--desktop">
-            {isReady && <NavLinks />}
+            {isReady ?  <NavLinks /> : null }
           </nav>
 
           <div className="site-header__end">
