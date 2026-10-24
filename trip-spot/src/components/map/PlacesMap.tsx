@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { Map as LeafletMap } from "leaflet";
 import { MapSearch } from "./MapSearch";
+import { MapZoom } from "./MapZoom";
 import type { Place } from "../..//types";
 import { categoryLabel } from "../../utils/constants";
 import { formatRating, pluralize, truncate } from "../../utils/format";
@@ -33,9 +34,10 @@ export default function PlacesMap({
       if (cancelled || !containerRef.current) return;
       const map = L.map(containerRef.current, {
         scrollWheelZoom: false,
+        zoomControl: false,
+        attributionControl: false,
       }).setView([42.7, 25.3], 6);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap",
         maxZoom: 18,
       }).addTo(map);
       mapRef.current = map;
@@ -48,7 +50,6 @@ export default function PlacesMap({
     };
   }, []);
 
-  // update: redraw markers whenever the places change
   useEffect(() => {
     let layer: import("leaflet").LayerGroup | null = null;
     let disposed = false;
@@ -175,6 +176,7 @@ export default function PlacesMap({
           onSelect={(r) => mapRef.current?.setView([r.lat, r.lng], 12)}
         />
       )}
+      <MapZoom mapRef={mapRef} />
     </div>
   );
 }

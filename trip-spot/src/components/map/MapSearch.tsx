@@ -77,7 +77,7 @@ export function MapSearch({
 
   return (
     <div
-      className="absolute left-14 right-3 top-3 z-[1000] sm:right-auto sm:w-80"
+      className="absolute right-3 top-3 z-[1000] w-64 sm:w-80"
       onClick={(e) => e.stopPropagation()}
       onDoubleClick={(e) => e.stopPropagation()}
     >

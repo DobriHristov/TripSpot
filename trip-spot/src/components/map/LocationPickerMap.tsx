@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { Map as LeafletMap, Marker } from "leaflet";
 import { MapSearch } from "./MapSearch";
+import { MapZoom } from "./MapZoom";
 import "leaflet/dist/leaflet.css";
 import "./PlacesMap.css";
 
@@ -26,16 +27,16 @@ export default function LocationPickerMap({
     onPickRef.current = onPick;
   }, [onPick]);
 
-  // mount: create the map + draggable marker once; unmount: destroy
   useEffect(() => {
     let cancelled = false;
     import("leaflet").then((L) => {
       if (cancelled || !containerRef.current) return;
       const map = L.map(containerRef.current, {
         scrollWheelZoom: true,
+        zoomControl: false,
+        attributionControl: false,
       }).setView([lat, lng], 7);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap",
         maxZoom: 18,
       }).addTo(map);
 
@@ -73,7 +74,6 @@ export default function LocationPickerMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // sync marker position when lat/lng change from the number inputs
   useEffect(() => {
     const marker = markerRef.current;
     if (!marker || !Number.isFinite(lat) || !Number.isFinite(lng)) return;
@@ -102,6 +102,7 @@ export default function LocationPickerMap({
           onPickRef.current(lat, lng);
         }}
       />
+      <MapZoom mapRef={mapRef} />
     </div>
   );
 }

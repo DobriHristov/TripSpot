@@ -26,7 +26,7 @@ export default function HomePage() {
             className="absolute inset-0 -z-20 h-full w-full object-cover"
           />
           <div className="absolute inset-0 -z-10 bg-gradient-hero" />
-          <div className="flex min-h-[68vh] flex-col justify-end p-8 text-primary-foreground sm:p-14">
+          <div className="flex h-auto flex-col justify-end p-8 text-primary-foreground sm:p-14">
             <span className="animate-rise glass mb-5 w-fit rounded-full px-4 py-1.5 text-xs font-semibold text-foreground">
               ✦ Пътеводител, писан от пътешественици
             </span>
@@ -34,7 +34,7 @@ export default function HomePage() {
               Места, които си <span className="text-gradient">заслужават</span>{" "}
               пътя.
             </h1>
-            <p className="animate-rise mt-5 max-w-xl text-lg opacity-90">
+            <p className="animate-rise mt-5 text-lg opacity-90">
               Открий скрити езера, стари улички и тайни заливи — и сподели
               своите.
             </p>
@@ -94,7 +94,7 @@ export default function HomePage() {
         ) : error ? (
           <ErrorState message={error} onRetry={reload} />
         ) : (
-          <PlaceGrid places={(data ?? []).slice(0, 3)} />
+          <PlaceGrid places={(data ?? []).slice(0, 6)} />
         )}
       </section>
     </>
